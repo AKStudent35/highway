@@ -1,3 +1,4 @@
-﻿  highway.cpp
+﻿  Table.cpp
 C:\Users\pitfo\Desktop\Studia\CP\highway\Table.h(1,10): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
+C:\Users\pitfo\Desktop\Studia\CP\highway\Table.cpp(10,55): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
   highway.vcxproj -> C:\Users\pitfo\Desktop\Studia\CP\highway\Debug\highway.exe

@@ -9,6 +9,24 @@ float singleCost(int k,int C) {
 
 float singleCost(int* C,int k,int i) {	return sqrtf(1 +k*k)*C[i];}
 
+int ReturnNewU(int n1, int** U, int k) {
+	int R = 4 - n1;
+
+	for (int i = 0; i < k; i++) {
+		R -= U[i][n1];
+	}
+	return R;
+}
+
+void SwapU(int **&U,int n1,int n2,int k) {
+	
+	for (int i = 0; i < 5; i++) {
+		U[i][n1]=U[i][n2];
+
+	}
+	U[k][n1]= ReturnNewU(n1,U,k);
+}
+
 // setting default costs
 void table::SetCosts(int * &C) {
 	C[0] = 4;
@@ -19,18 +37,37 @@ void table::SetCosts(int * &C) {
 	C[5] = 1;
 }
 
-// generating first row of results
-void table::FistIteration(float**& So, int* C)
-{	
-	int counter = 0;
-	for (int i = 4; i >=0; i--) {
-		So[0][counter] = singleCost(C,i,0);
-		counter++;
+//prints result to console
+void table::PrintResult(float** S, int** U) {
+	float buff;
+	buff = S[5][0];
+	int a = 0;
+
+	for (int i = 0; i < 5; i++) {
+		if (buff > S[5][i]) {
+			buff = S[5][i];
+			a = i;
+		}
+	}
+
+	std::cout << "the most optiimal way to reach destination is equal to" << buff << std::endl;
+	for (int i = 0; i < 6; i++) {
+		std::cout << "control variable U" << i << " is equal to " << U[i][a] << std::endl;
 	}
 }
 
 // printg table to the console
 void table::PrintTable(float** S) {
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 5; j++) {
+			std::cout << S[i][j] << std::endl;
+		}
+		std::cout << std::endl << std::endl;
+	}
+}
+
+// printg table to the console
+void table::PrintTable(int** S) {
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 5; j++) {
 			std::cout << S[i][j] << std::endl;
@@ -70,12 +107,25 @@ void table::SetBasicCosts(float**& S, int* C) {
 	//}
 }
 
+// generating first row of results
+void table::FistIteration(float**& So, int**& U, int* C)
+{
+	int counter = 0;
+	for (int i = 4; i >= 0; i--) {
+		So[0][counter] = singleCost(C, i, 0);
+		U[0][counter] = i;
+		counter++;
+	}
+}
+
 // summing costs at some point (obtaining 4 paths)
-void table::Iterate(float **S,float**&So,int* C,int k) {
+void table::Iterate(float **S,float**&So,int**& U,int k) {
 	int counter=0;
 	float* Sbuff;
 	float buff;
 	Allocate(Sbuff,15);
+	int a;
+	int b;
 
 
 	for (int i = 0; i < 5; i++) {
@@ -89,12 +139,17 @@ void table::Iterate(float **S,float**&So,int* C,int k) {
 		}
 
 		buff = Sbuff[counter - 1];
+		a = 4-i;
+		b = 4;
 		for (int j = counter - 1; j >= counter -4 + i - 1; j--) {
-			if (buff > Sbuff[j]) {
+			if (buff >= Sbuff[j]) {
 				buff = Sbuff[j];
+				a=b;
 			}
+			b--;
 		}
 
+		SwapU(U,i,a,k);
 		So[k][i] = buff;
 		//std::cout << buff << std:: endl;
 	}
@@ -106,10 +161,17 @@ void table::Iterate(float **S,float**&So,int* C,int k) {
 	//}
 }
 
-void table::LastIteration(float** S, float**& So, int* C) {
+//obtaining results of the last iteration
+void table::LastIteration(float** S, float**& So,int**&U, int* C) {
 		for (int j = 0; j <=4; j++) {
-			std::cout << S[5][j] << std::endl << So[4][j] << std::endl;
+			//std::cout << S[5][j] << std::endl << So[4][j] << std::endl;
+
 			So[5][j] = S[5][j] + So[4][j];
+			
+			for (int i = 0; i < 5; i++) {
+				U[5][i] = i;
+			} 
+
 			//std::cout << S[k][counter] << std::endl << So[k - 1][j] << std::endl;
 			//std::cout << Sbuff[counter];
 		}
@@ -127,7 +189,14 @@ void table::Allocate(float*& S, int N) {
 }
 
 // allocating space for new 2d array
-void table::Allocate(float**&S,int N,int M) {
+void table::Allocate(int**& S, int N, int M) {
+	S = new int* [N];
+	for (int i = 0; i < N; i++) {
+		S[i] = new int[M];
+	}
+}
+// allocating space for new 2d array
+void table::Allocate(float**& S, int N, int M) {
 	S = new float* [N];
 	for (int i = 0; i < N; i++) {
 		S[i] = new float[M];

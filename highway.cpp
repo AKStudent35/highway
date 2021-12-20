@@ -8,11 +8,14 @@ int main()
 	float** S;
 
 	float** So;
+	int** U;
 
 	// memory allocation
 	table::Allocate(C,6);
 	table::Allocate(S,6,15);
 	table::Allocate(So, 6, 5);
+	table::Allocate(U, 6, 5);
+
 
 	// set basic variables
 	table::SetCosts(C);
@@ -20,23 +23,29 @@ int main()
 	
 
 	//first iterations made to debug
-	table::FistIteration(So, C);
-	//std::cout << "after first iteration" << std::endl << std::endl;
+	table::FistIteration(So,U, C);
+
+	table::Iterate(S, So, U, 1);
+
+	table::Iterate(S, So, U, 2);
+
+	table::Iterate(S, So, U, 3);
+
+	table::Iterate(S, So, U, 4);
+
+	table::LastIteration(S, So,U, C);
+
+
+
+	//std::cout << "U table" << std::endl;
+
+	//table::PrintTable(U);
+
+	//std::cout << "after next iteration" << std::endl << std::endl;
 	//table::PrintTable(So);
 
-	table::Iterate(S, So, C, 1);
 
-	table::Iterate(S, So, C, 2);
-
-	table::Iterate(S, So, C, 3);
-
-	table::Iterate(S, So, C, 4);
-
-	table::LastIteration(S, So, C);
-
-	std::cout << "after next iteration" << std::endl << std::endl;
-	table::PrintTable(So);
-
+	table::PrintResult(So,U);
 
 
 
@@ -45,8 +54,9 @@ int main()
 	zalokowałem koszta
 	zrobiłem pierwszą iterację
 	liczą się poprawnie(mam nadzieję) tylko w innej kolejności - dorobic algorytm!!!
+	zrobiłem poprawnie liczące się koszty
+	Praktycznie KONIEC - wysłać kamelowi przez gita - niech dołączy - dynamic punkty dorobić jeśli będzie chwila wolnego
 
-	Zrobic algorytm z U - system binarny
 	dodać możliwość dynamicznego wyboru ilości punktów
 
 	2x tablica 7x4
